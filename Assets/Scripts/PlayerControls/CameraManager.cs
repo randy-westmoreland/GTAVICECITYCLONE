@@ -23,6 +23,11 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private float _minimumPivotAngle = -30f;
     [SerializeField] private float _maximumPivotAngle = 30f;
 
+    [Header("Mouse Rotation LImits")]
+    [SerializeField] private bool _enableMouseLocking = true;
+    [SerializeField] private float _maximumLookAngle = 360f;
+    [SerializeField] private float _minimumLookAngle = -360f;
+
     public void HandleAllCameraMovement()
     {
         FollowTarget();
@@ -33,6 +38,11 @@ public class CameraManager : MonoBehaviour
     {
         _inputManager = FindObjectOfType<InputManager>();
         _playerTransform = FindObjectOfType<PlayerManager>().transform;
+    }
+
+    private void HandleCursorLock()
+    {
+
     }
 
     private void FollowTarget()
