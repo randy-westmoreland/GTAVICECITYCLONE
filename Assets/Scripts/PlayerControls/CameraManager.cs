@@ -30,6 +30,7 @@ public class CameraManager : MonoBehaviour
 
     public void HandleAllCameraMovement()
     {
+        HandleCursorLock();
         FollowTarget();
         RotateCamera();
     }
@@ -38,11 +39,40 @@ public class CameraManager : MonoBehaviour
     {
         _inputManager = FindObjectOfType<InputManager>();
         _playerTransform = FindObjectOfType<PlayerManager>().transform;
+
+        // Lock cursor on start if enabled
+        if (_enableMouseLocking)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 
     private void HandleCursorLock()
     {
+        if (!_enableMouseLocking) return;
 
+        // Toggle cursor lock with Escape key
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (Cursor.lockState == CursorLockMode.Locked)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+
+            // Re-lock cursor when clicking in game window
+            if (Cursor.lockState != CursorLockMode.Locked && Input.GetMouseButtonDown(0))
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+        }
     }
 
     private void FollowTarget()
@@ -63,6 +93,9 @@ public class CameraManager : MonoBehaviour
         // Make rotation frame-rate independent by multiplying with Time.deltatime
         _lookAngle += _inputManager.cameraInputX * _cameraLookSpeed * sensitivityMultiplier * Time.deltaTime;
         _pivotAngle -= _inputManager.cameraInputY * _cameraPivotSpeed * sensitivityMultiplier * Time.deltaTime;
+
+        // Clamp the look angle to prevent full 360 rotation if desired
+        _lookAngle = Mathf.Clamp(_lookAngle, _minimumLookAngle, _maximumLookAngle);
 
         // Clamp the pivot angle to prevent flipping
         _pivotAngle = Mathf.Clamp(_pivotAngle, _minimumPivotAngle, _maximumPivotAngle);
