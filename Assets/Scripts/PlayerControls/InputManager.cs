@@ -48,7 +48,7 @@ public class InputManager : MonoBehaviour
         _cameraInputY = _cameraInput.y;
 
         _moveAmount = Mathf.Clamp01(Mathf.Abs(_horizontalInput) + Mathf.Abs(_verticalInput));
-        _animatorManager.UpdateAnimatorValues(0, _moveAmount);
+        _animatorManager.UpdateAnimatorValues(0, _moveAmount, _playerMovement.IsSprinting);
     }
 
     private void HandleSprintInput()
@@ -82,3 +82,4 @@ public class InputManager : MonoBehaviour
         _playerControls.Disable();
     }
 }
+
