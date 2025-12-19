@@ -8,12 +8,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private InputManager _inputManager;
 
     [Header("Movement Flags")]
+    [SerializeField] private bool _isMoving;
     [SerializeField] private bool _isSprinting;
-    [SerializeField] private bool _isWalking;
 
     [Header("Movement")]
     [SerializeField] private Vector3 _moveDirection;
-    [SerializeField] private float _movementSpeed = 5f;
+    [SerializeField] private float _runningSpeed = 5f;
     [SerializeField] private float _walkingSpeed = 1.5f;
     [SerializeField] private float _sprintingSpeed = 7f;
     [SerializeField] private float _rotationSpeed = 12f;
@@ -43,7 +43,24 @@ public class PlayerMovement : MonoBehaviour
         _moveDirection += _cameraObject.right * _inputManager.HorizontalInput;
         _moveDirection.Normalize();
         _moveDirection.y = 0;
-        _moveDirection *= _movementSpeed;
+
+        if (_isSprinting)
+        {
+            _moveDirection *= _sprintingSpeed;
+        }
+        else
+        {
+            if (_inputManager.MoveAmount >= 0.5f)
+            {
+                _moveDirection *= _runningSpeed;
+                _isMoving = true;
+            }
+            else if (_inputManager.MoveAmount < 0.5f)
+            {
+                _moveDirection *= _walkingSpeed;
+                _isMoving = false;
+            }
+        }
 
         Vector3 movementVelocity = _moveDirection;
         _playerRigidbody.velocity = movementVelocity;

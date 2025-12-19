@@ -26,6 +26,7 @@ public class InputManager : MonoBehaviour
     public float CameraInputY { get => _cameraInputY; set => _cameraInputY = value; }
     public float VerticalInput { get => _verticalInput; set => _verticalInput = value; }
     public float HorizontalInput { get => _horizontalInput; set => _horizontalInput = value; }
+    public float MoveAmount { get => _moveAmount; set => _moveAmount = value; }
 
     public void HandleAllInputs()
     {
@@ -47,13 +48,13 @@ public class InputManager : MonoBehaviour
         _cameraInputX = _cameraInput.x;
         _cameraInputY = _cameraInput.y;
 
-        _moveAmount = Mathf.Clamp01(Mathf.Abs(_horizontalInput) + Mathf.Abs(_verticalInput));
-        _animatorManager.UpdateAnimatorValues(0, _moveAmount, _playerMovement.IsSprinting);
+        MoveAmount = Mathf.Clamp01(Mathf.Abs(_horizontalInput) + Mathf.Abs(_verticalInput));
+        _animatorManager.UpdateAnimatorValues(0, MoveAmount, _playerMovement.IsSprinting);
     }
 
     private void HandleSprintInput()
     {
-        if (_sprintInput && _moveAmount > 0.5f)
+        if (_sprintInput && MoveAmount > 0.5f)
         {
             _playerMovement.IsSprinting = true;
         }
