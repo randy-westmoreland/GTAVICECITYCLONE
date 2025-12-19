@@ -87,12 +87,12 @@ public class CameraManager : MonoBehaviour
         Quaternion targetRotation;
 
         // Detect input type based on magnitude and apply appropriate sensitivity
-        float inputMagnitude = Mathf.Abs(_inputManager.cameraInputX) + Mathf.Abs(_inputManager.cameraInputY);
+        float inputMagnitude = Mathf.Abs(_inputManager.CameraInputX) + Mathf.Abs(_inputManager.CameraInputY);
         float sensitivityMultiplier = inputMagnitude > 1f ? _mouseSensitivityMultiplier : _gamepadSensitivityMultiplier;
 
         // Make rotation frame-rate independent by multiplying with Time.deltatime
-        _lookAngle += _inputManager.cameraInputX * _cameraLookSpeed * sensitivityMultiplier * Time.deltaTime;
-        _pivotAngle -= _inputManager.cameraInputY * _cameraPivotSpeed * sensitivityMultiplier * Time.deltaTime;
+        _lookAngle += _inputManager.CameraInputX * _cameraLookSpeed * sensitivityMultiplier * Time.deltaTime;
+        _pivotAngle -= _inputManager.CameraInputY * _cameraPivotSpeed * sensitivityMultiplier * Time.deltaTime;
 
         // Clamp the look angle to prevent full 360 rotation if desired
         _lookAngle = Mathf.Clamp(_lookAngle, _minimumLookAngle, _maximumLookAngle);

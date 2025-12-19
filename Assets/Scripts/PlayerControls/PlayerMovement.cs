@@ -7,14 +7,22 @@ public class PlayerMovement : MonoBehaviour
     [Header("Scripts References")]
     [SerializeField] private InputManager _inputManager;
 
+    [Header("Movement Flags")]
+    [SerializeField] private bool _isSprinting;
+    [SerializeField] private bool _isWalking;
+
     [Header("Movement")]
     [SerializeField] private Vector3 _moveDirection;
     [SerializeField] private float _movementSpeed = 5f;
+    [SerializeField] private float _walkingSpeed = 1.5f;
+    [SerializeField] private float _sprintingSpeed = 7f;
     [SerializeField] private float _rotationSpeed = 12f;
 
     // private Transform _cameraObject;
     public Transform _cameraObject;
     private Rigidbody _playerRigidbody;
+
+    public bool IsSprinting { get => _isSprinting; set => _isSprinting = value; }
 
     private void Awake()
     {
@@ -31,8 +39,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleMovement()
     {
-        _moveDirection = _cameraObject.forward * _inputManager.verticalInput;
-        _moveDirection += _cameraObject.right * _inputManager.horizontalInput;
+        _moveDirection = _cameraObject.forward * _inputManager.VerticalInput;
+        _moveDirection += _cameraObject.right * _inputManager.HorizontalInput;
         _moveDirection.Normalize();
         _moveDirection.y = 0;
         _moveDirection *= _movementSpeed;
@@ -44,8 +52,8 @@ public class PlayerMovement : MonoBehaviour
     private void HandleRotation()
     {
         Vector3 targetDirection = Vector3.zero;
-        targetDirection = _cameraObject.forward * _inputManager.verticalInput;
-        targetDirection += _cameraObject.right * _inputManager.horizontalInput;
+        targetDirection = _cameraObject.forward * _inputManager.VerticalInput;
+        targetDirection += _cameraObject.right * _inputManager.HorizontalInput;
         targetDirection.Normalize();
         targetDirection.y = 0;
 
