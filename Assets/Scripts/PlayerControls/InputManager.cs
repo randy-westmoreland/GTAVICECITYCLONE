@@ -21,13 +21,34 @@ public class InputManager : MonoBehaviour
     private PlayerMovement _playerMovement;
     private AnimatorManager _animatorManager;
 
-    // Properties
+    /// <summary>
+    /// Gets or sets the camera input on the X axis.
+    /// </summary>
     public float CameraInputX { get => _cameraInputX; set => _cameraInputX = value; }
+
+    /// <summary>
+    /// Gets or sets the camera input on the Y axis.
+    /// </summary>
     public float CameraInputY { get => _cameraInputY; set => _cameraInputY = value; }
+
+    /// <summary>
+    /// Gets or sets the vertical movement input.
+    /// </summary>
     public float VerticalInput { get => _verticalInput; set => _verticalInput = value; }
+
+    /// <summary>
+    /// Gets or sets the horizontal movement input.
+    /// </summary>
     public float HorizontalInput { get => _horizontalInput; set => _horizontalInput = value; }
+
+    /// <summary>
+    /// Gets or sets the move amount.
+    /// </summary>
     public float MoveAmount { get => _moveAmount; set => _moveAmount = value; }
 
+    /// <summary>
+    /// Handles all input functionalities.
+    /// </summary>
     public void HandleAllInputs()
     {
         HandleMovementInput();

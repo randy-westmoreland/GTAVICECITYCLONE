@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Manages camera movement and rotation functionalities.
+/// </summary>
 public class CameraManager : MonoBehaviour
 {
     private InputManager _inputManager;
@@ -28,6 +31,9 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private float _maximumLookAngle = 360f;
     [SerializeField] private float _minimumLookAngle = -360f;
 
+    /// <summary>
+    /// Handles all camera movement functionalities.
+    /// </summary>
     public void HandleAllCameraMovement()
     {
         HandleCursorLock();
@@ -94,10 +100,21 @@ public class CameraManager : MonoBehaviour
         _lookAngle += _inputManager.CameraInputX * _cameraLookSpeed * sensitivityMultiplier * Time.deltaTime;
         _pivotAngle -= _inputManager.CameraInputY * _cameraPivotSpeed * sensitivityMultiplier * Time.deltaTime;
 
-        // Clamp the look angle to prevent full 360 rotation if desired
-        _lookAngle = Mathf.Clamp(_lookAngle, _minimumLookAngle, _maximumLookAngle);
+        // For gamepad controls, allow unlimited horizontal rotation
+        // Only clamp if you specifically want to limit mouse rotation
+        if (_enableMouseLocking && Cursor.lockState == CursorLockMode.Locked)
+        {
+            // When cursor is locked (gamepad or locked mouse), allow unlimited rotation
+            // Normalize the angle to prevent overflow
+            _lookAngle = _lookAngle % 360f;
+        }
+        else
+        {
+            // When cursor is free (mouse), optionally clamp rotation
+            _lookAngle = Mathf.Clamp(_lookAngle, _minimumLookAngle, _maximumLookAngle);
+        }
 
-        // Clamp the pivot angle to prevent flipping
+        // Always clamp the pivot angle to prevent flipping
         _pivotAngle = Mathf.Clamp(_pivotAngle, _minimumPivotAngle, _maximumPivotAngle);
 
         rotation = Vector3.zero;

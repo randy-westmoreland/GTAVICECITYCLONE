@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Manages the animator component for the player character.
+/// </summary>
 [RequireComponent(typeof(Animator))]
 public class AnimatorManager : MonoBehaviour
 {
@@ -7,6 +10,12 @@ public class AnimatorManager : MonoBehaviour
     private int _horizontal;
     private int _vertical;
 
+    /// <summary>
+    /// Updates the animator parameters based on movement input.
+    /// </summary>
+    /// <param name="horizontalMovement"></param>
+    /// <param name="verticalMovement"></param>
+    /// <param name="isSprinting"></param>
     public void UpdateAnimatorValues(float horizontalMovement, float verticalMovement, bool isSprinting)
     {
         float snappedHorizontal;
@@ -66,6 +75,17 @@ public class AnimatorManager : MonoBehaviour
 
         _animator.SetFloat(_horizontal, snappedHorizontal, 0.1f, Time.deltaTime);
         _animator.SetFloat(_vertical, snappedVertical, 0.1f, Time.deltaTime);
+    }
+
+    /// <summary>
+    /// Plays the target animation with the specified interaction state.
+    /// </summary>
+    /// <param name="targetAnimation"></param>
+    /// <param name="isInteracting"></param>
+    public void PlayTargetAnimation(string targetAnimation, bool isInteracting)
+    {
+        _animator.SetBool("isInteracting", isInteracting);
+        _animator.CrossFade(targetAnimation, 0.2f);
     }
 
     private void Awake()
