@@ -19,8 +19,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement Flags")]
     [SerializeField] private bool _isMoving;
     [SerializeField] private bool _isSprinting;
-    [SerializeField] private bool _isInAir;
-    [SerializeField] private bool _isGrounded; // May not need to be a serialized field
+    [SerializeField] private bool _isGrounded;
+    [SerializeField] private bool _isJumping;
 
     [Header("Movement Values")]
     [SerializeField] private Vector3 _moveDirection;
@@ -36,6 +36,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _rayCastHeightOffset = 0.5f;
     [SerializeField] private LayerMask _groundLayer;  // May not need to be a serialized field
 
+    [Header("Jumping Variables")]
+    [SerializeField] private float _jumpHeight = 4f;
+    [SerializeField] private float _gravityIntensity = -15f;
+
     private Rigidbody _playerRigidbody;
 
     /// <summary>
@@ -43,13 +47,20 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     public bool IsSprinting { get => _isSprinting; set => _isSprinting = value; }
 
-    private void Awake()
-    {
-        _inputManager = GetComponent<InputManager>();
-        _playerRigidbody = GetComponent<Rigidbody>();
-        _playerManager = GetComponent<PlayerManager>();
-        _animatorManager = GetComponent<AnimatorManager>();
-    }
+    /// <summary>
+    /// Gets or sets a value indicating whether the player is jumping.
+    /// </summary>
+    public bool IsJumping { get => _isJumping; set => _isJumping = value; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the player is grounded.
+    /// </summary>
+    public bool IsGrounded { get => _isGrounded; set => _isGrounded = value; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the player is moving.
+    /// </summary>
+    public bool IsMoving { get => _isMoving; set => _isMoving = value; }
 
     /// <summary>
     /// Handles all movement-related functionalities.
@@ -67,8 +78,48 @@ public class PlayerMovement : MonoBehaviour
         HandleRotation();
     }
 
+    /// <summary>
+    /// Handles the jumping functionality.
+    /// </summary>
+    public void HandleJumping()
+    {
+        if (_isGrounded)
+        {
+            _animatorManager.Animator.SetBool("isJumping", true);
+            _animatorManager.PlayTargetAnimation("Jump", false);
+
+            float jumpVelocity = Mathf.Sqrt(-2 * _gravityIntensity * _jumpHeight);
+            Vector3 playerVelocity = _moveDirection;
+
+            playerVelocity.y = jumpVelocity;
+            _playerRigidbody.velocity = playerVelocity;
+
+            _isJumping = false;
+        }
+    }
+
+    /// <summary>
+    /// Sets the isJumping flag.
+    /// </summary>
+    /// <param name="isJumping"></param>
+    public void SetIsJumping(bool isJumping)
+    {
+        _isJumping = isJumping;
+    }
+
+    private void Awake()
+    {
+        _inputManager = GetComponent<InputManager>();
+        _playerRigidbody = GetComponent<Rigidbody>();
+        _playerManager = GetComponent<PlayerManager>();
+        _animatorManager = GetComponent<AnimatorManager>();
+    }
+
     private void HandleMovement()
     {
+        if (_isJumping)
+            return;
+
         _moveDirection = _cameraObject.forward * _inputManager.VerticalInput;
         _moveDirection += _cameraObject.right * _inputManager.HorizontalInput;
         _moveDirection.Normalize();
@@ -98,6 +149,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleRotation()
     {
+        if (_isJumping)
+            return;
+
         Vector3 targetDirection = Vector3.zero;
         targetDirection = _cameraObject.forward * _inputManager.VerticalInput;
         targetDirection += _cameraObject.right * _inputManager.HorizontalInput;
@@ -123,7 +177,7 @@ public class PlayerMovement : MonoBehaviour
         rayCastOrigin.y += _rayCastHeightOffset;
         targetPosition = transform.position;
 
-        if (!_isGrounded /*isJumping*/)
+        if (!_isGrounded && !_isJumping)
         {
             if (!_playerManager.IsInteracting)
             {
@@ -150,6 +204,18 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             _isGrounded = false;
+        }
+
+        if (_isGrounded && !_isJumping)
+        {
+            if (_playerManager.IsInteracting || _inputManager.MoveAmount > 0)
+            {
+                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 0.1f);
+            }
+            else
+            {
+                transform.position = targetPosition;
+            }
         }
     }
 }

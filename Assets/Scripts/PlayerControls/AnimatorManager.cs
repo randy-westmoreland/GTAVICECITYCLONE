@@ -11,6 +11,11 @@ public class AnimatorManager : MonoBehaviour
     private int _vertical;
 
     /// <summary>
+    /// Gets or sets the animator component.
+    /// </summary>
+    public Animator Animator { get => _animator; set => _animator = value; }
+
+    /// <summary>
     /// Updates the animator parameters based on movement input.
     /// </summary>
     /// <param name="horizontalMovement"></param>
@@ -73,8 +78,8 @@ public class AnimatorManager : MonoBehaviour
             snappedVertical = 2f;
         }
 
-        _animator.SetFloat(_horizontal, snappedHorizontal, 0.1f, Time.deltaTime);
-        _animator.SetFloat(_vertical, snappedVertical, 0.1f, Time.deltaTime);
+        Animator.SetFloat(_horizontal, snappedHorizontal, 0.1f, Time.deltaTime);
+        Animator.SetFloat(_vertical, snappedVertical, 0.1f, Time.deltaTime);
     }
 
     /// <summary>
@@ -84,13 +89,13 @@ public class AnimatorManager : MonoBehaviour
     /// <param name="isInteracting"></param>
     public void PlayTargetAnimation(string targetAnimation, bool isInteracting)
     {
-        _animator.SetBool("isInteracting", isInteracting);
-        _animator.CrossFade(targetAnimation, 0.2f);
+        Animator.SetBool("isInteracting", isInteracting);
+        Animator.CrossFade(targetAnimation, 0.2f);
     }
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
+        Animator = GetComponent<Animator>();
         _horizontal = Animator.StringToHash("Horizontal");
         _vertical = Animator.StringToHash("Vertical");
     }

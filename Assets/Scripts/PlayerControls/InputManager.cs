@@ -13,8 +13,11 @@ public class InputManager : MonoBehaviour
     private Vector2 _movementInput;
     private Vector2 _cameraInput;
 
-    private bool _sprintInput;
     private float _moveAmount;
+
+    [Header("Input Button Flag")]
+    private bool _sprintInput;
+    private bool _jumpInput;
 
     // References
     private PlayerControls _playerControls;
@@ -53,12 +56,37 @@ public class InputManager : MonoBehaviour
     {
         HandleMovementInput();
         HandleSprintInput();
+        HandleJumpingInput();
     }
 
     private void Awake()
     {
         _animatorManager = GetComponent<AnimatorManager>();
         _playerMovement = GetComponent<PlayerMovement>();
+    }
+
+    private void OnEnable()
+    {
+        if (_playerControls == null)
+        {
+            _playerControls = new PlayerControls();
+            _playerControls.PlayerMovement.Movement.performed += ctx => _movementInput = ctx.ReadValue<Vector2>();
+            _playerControls.PlayerMovement.CameraMovement.performed += ctx => _cameraInput = ctx.ReadValue<Vector2>();
+
+            // Sprinting
+            _playerControls.PlayerActions.B.performed += ctx => _sprintInput = true;
+            _playerControls.PlayerActions.B.canceled += ctx => _sprintInput = false;
+
+            // 
+            _playerControls.PlayerActions.Jump.performed += ctx => _jumpInput = true;
+        }
+
+        _playerControls.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _playerControls.Disable();
     }
 
     private void HandleMovementInput()
@@ -85,23 +113,13 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    private void HandleJumpingInput()
     {
-        if (_playerControls == null)
+        if (_jumpInput)
         {
-            _playerControls = new PlayerControls();
-            _playerControls.PlayerMovement.Movement.performed += ctx => _movementInput = ctx.ReadValue<Vector2>();
-            _playerControls.PlayerMovement.CameraMovement.performed += ctx => _cameraInput = ctx.ReadValue<Vector2>();
-            _playerControls.PlayerActions.B.performed += ctx => _sprintInput = true;
-            _playerControls.PlayerActions.B.canceled += ctx => _sprintInput = false;
+            _jumpInput = false;
+            _playerMovement.IsJumping = true;
+            _playerMovement.HandleJumping();
         }
-
-        _playerControls.Enable();
-    }
-
-    private void OnDisable()
-    {
-        _playerControls.Disable();
     }
 }
-
