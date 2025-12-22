@@ -24,8 +24,8 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Movement Values")]
     [SerializeField] private Vector3 _moveDirection;
-    [SerializeField] private float _runningSpeed = 5f;
     [SerializeField] private float _walkingSpeed = 1.5f;
+    [SerializeField] private float _runningSpeed = 5f;
     [SerializeField] private float _sprintingSpeed = 7f;
     [SerializeField] private float _rotationSpeed = 12f;
 
