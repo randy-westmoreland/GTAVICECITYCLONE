@@ -36,7 +36,7 @@ ModelImporter:
       name: Jump
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 20
+      firstFrame: 0
       lastFrame: 33
       wrapMode: 0
       orientationOffsetY: 0
@@ -424,8 +424,7 @@ ModelImporter:
     - name: mixamorig:RightHandIndex3
       parentName: mixamorig:RightHandIndex2
       position: {x: 0.0000013010829, y: 0.00000079628404, z: -0.0000010830705}
-      rotation: {x: 0.00000002365142, y: 0.000000011441876, z: -0.000000046686402,
-        w: 1}
+      rotation: {x: 0.00000002365142, y: 0.000000011441876, z: -0.000000046686402, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: mixamorig:RightHandIndex4
       parentName: mixamorig:RightHandIndex3
@@ -524,8 +523,7 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 8b43fc18f7cc6424d96891345d1ddccd,
-    type: 3}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 8b43fc18f7cc6424d96891345d1ddccd, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
