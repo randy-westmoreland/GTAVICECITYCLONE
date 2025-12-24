@@ -3,6 +3,9 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 
+/// <summary>
+/// Custom Editor Window to display and manage the current selection in the Unity Editor.
+/// </summary>
 public class SelectionWindow : EditorWindow
 {
     private Vector2 _scrollPos;
@@ -10,6 +13,9 @@ public class SelectionWindow : EditorWindow
     private bool _showGameObjectsOnly = false;
     private bool _showAssetsOnly = false;
 
+    /// <summary>
+    /// Opens the Selection Window from the Unity Editor menu.
+    /// </summary>
     [MenuItem("Window/Selection Window")]
     public static void ShowWindow()
     {
